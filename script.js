@@ -89,7 +89,7 @@ class Calculator {
     }
 
     chooseOperation(operation) {
-        previousOperand.innerText = currentOperand.innerText;
+        previousOperand.innerText += currentOperand.innerText;
         currentOperand.innerText = operation;
     }
 
@@ -105,8 +105,6 @@ const acBTN = document.getElementById('ac');
 const delBTN = document.getElementById('del');
 const pointBTN = document.getElementById('point');
 
-// console.log("hhhhh");
-// console.log(previousOperand);
 
 
 Calculator = new Calculator(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN);
