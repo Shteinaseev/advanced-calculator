@@ -1,7 +1,8 @@
 class Calculator {
-    operationList = [];
+    operationList = ['(', ')'];
+    stack = [];
 
-    constructor(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN) {
+    constructor(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN, parenthesis) {
         this.previousOperand = previousOperand;
         this.currentOperand = currentOperand;
         this.numberBTNs = numberBTNs;
@@ -10,18 +11,26 @@ class Calculator {
         this.acBTN = acBTN;
         this.delBTN = delBTN;
         this.pointBTN = pointBTN;
+        this.parenthesisBTN = parenthesis;
 
-        numberBTNs.forEach((number) => {
+        this.numberBTNs.forEach((number) => {
             number.addEventListener('click', () => {
                 this.appendNumber(number.innerText)
             })
         })
 
-        operationBTNs.forEach((operation) => {
+        this.operationBTNs.forEach((operation) => {
             operation.addEventListener('click', () => {
                 this.chooseOperation(operation.innerText)
             })
         })
+
+        this.parenthesisBTN.forEach((symbol) => {
+            symbol.addEventListener('click', () => {
+                this.appendParenthesis(symbol.innerText)
+            })
+        })
+
 
         for (let i = 0; i < this.operationBTNs.length; i++) {
             this.operationList.push(this.operationBTNs[i].innerText);
@@ -40,57 +49,80 @@ class Calculator {
         })
     }
 
-    calculate() {
+    calculate() {   
         let operator = previousOperand.innerText.slice(-1);
         switch (operator) {
             case '+':
-                currentOperand.innerText = parseFloat(previousOperand.innerText) + parseFloat(currentOperand.innerText);
-                previousOperand.innerText = '';
+                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) + parseFloat(this.currentOperand.innerText);
+                this.previousOperand.innerText = '';
                 break;
             case '-':
-                currentOperand.innerText = parseFloat(previousOperand.innerText) - parseFloat(currentOperand.innerText);
-                previousOperand.innerText = '';
+                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) - parseFloat(this.currentOperand.innerText);
+                this.previousOperand.innerText = '';
                 break;
             case '/':
-                currentOperand.innerText = parseFloat(previousOperand.innerText) / parseFloat(currentOperand.innerText);
-                previousOperand.innerText = '';
+                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) / parseFloat(this.currentOperand.innerText);
+                this.previousOperand.innerText = '';
                 break;
             case '*':
-                currentOperand.innerText = parseFloat(previousOperand.innerText) * parseFloat(currentOperand.innerText);
-                previousOperand.innerText = '';
+                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) * parseFloat(this.currentOperand.innerText);
+                this.previousOperand.innerText = '';
                 break;
             case '%':
-                currentOperand.innerText = parseFloat(currentOperand.innerText / 100) * parseFloat(previousOperand.innerText);
-                previousOperand.innerText = '';
+                this.currentOperand.innerText = parseFloat(this.currentOperand.innerText / 100) * parseFloat(this.previousOperand.innerText);
+                this.previousOperand.innerText = '';
                 break;
         }
     }
 
     clearAll() {
-        currentOperand.innerText = '';
-        previousOperand.innerText = '';
+        this.currentOperand.innerText = '';
+        this.previousOperand.innerText = '';
     }
 
     delSymbol() {
-        currentOperand.innerText = currentOperand.innerText.slice(0, -1);
+        this.currentOperand.innerText = this.currentOperand.innerText.slice(0, -1);
     }
 
     appendNumber(number) {
         for (let i = 0; i < this.operationList.length; i++) {
-            if (currentOperand.innerText === this.operationList[i]) {
-                previousOperand.innerText += currentOperand.innerText;
-                currentOperand.innerText = '';
+            if (this.currentOperand.innerText === this.operationList[i]) {
+                this.previousOperand.innerText += this.currentOperand.innerText;
+                this.currentOperand.innerText = '';
             }
         }
-        if (currentOperand.innerText === '0') {
-            currentOperand.innerText = '';
+        if (this.currentOperand.innerText === '0') {
+            this.currentOperand.innerText = '';
         }
-        currentOperand.innerText += number;
+        this.currentOperand.innerText += number;
+    }
+
+    appendParenthesis(symbol){
+        if(symbol == ')'){
+            for (let i = 0; i < this.currentOperand.innerText.length; i++) {
+                if(!this.currentOperand.innerText.includes('(')){
+                    return;
+                }
+            }
+        }
+
+        let lastSymbol = currentOperand.innerText.slice(-1);
+        for (let i = 0; i < this.operationList.length; i++) {
+            if(!this.operationList.includes(lastSymbol)){
+                this.currentOperand.innerText += '*';
+                break;
+            } 
+        };
+        if(symbol == '('){
+            this.currentOperand.innerText += '(';
+        } else if(symbol == ')'){
+            this.currentOperand.innerText += ')';
+        }
     }
 
     chooseOperation(operation) {
-        previousOperand.innerText += currentOperand.innerText;
-        currentOperand.innerText = operation;
+        this.previousOperand.innerText += this.currentOperand.innerText;
+        this.currentOperand.innerText = operation;
     }
 
 
@@ -104,7 +136,6 @@ const eqlBTN = document.getElementById('eql');
 const acBTN = document.getElementById('ac');
 const delBTN = document.getElementById('del');
 const pointBTN = document.getElementById('point');
+const parenthesis = document.querySelectorAll('.parenthesis')
 
-
-
-Calculator = new Calculator(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN);
+Calculator = new Calculator(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN, parenthesis);
