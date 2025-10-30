@@ -1,7 +1,17 @@
 class Calculator {
-    operationList = ['(', ')'];
+    operationList = ['(', ')', '.'];
     stack = [];
+    output = [];
 
+    precedence = new Map ([
+        ["+", 2],
+        ["-", 2],
+        ["*", 3],
+        ["/", 3],
+        ["^", 4],
+        ["(", 5]
+    ])
+    
     constructor(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN, parenthesis) {
         this.previousOperand = previousOperand;
         this.currentOperand = currentOperand;
@@ -31,12 +41,12 @@ class Calculator {
             })
         })
 
-
         for (let i = 0; i < this.operationBTNs.length; i++) {
             this.operationList.push(this.operationBTNs[i].innerText);
         }
 
         eqlBTN.addEventListener('click', () => {
+            this.reversePOlNotationConv();
             this.calculate();
         })
 
@@ -50,29 +60,57 @@ class Calculator {
     }
 
     calculate() {   
-        let operator = previousOperand.innerText.slice(-1);
-        switch (operator) {
-            case '+':
-                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) + parseFloat(this.currentOperand.innerText);
-                this.previousOperand.innerText = '';
-                break;
-            case '-':
-                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) - parseFloat(this.currentOperand.innerText);
-                this.previousOperand.innerText = '';
-                break;
-            case '/':
-                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) / parseFloat(this.currentOperand.innerText);
-                this.previousOperand.innerText = '';
-                break;
-            case '*':
-                this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) * parseFloat(this.currentOperand.innerText);
-                this.previousOperand.innerText = '';
-                break;
-            case '%':
-                this.currentOperand.innerText = parseFloat(this.currentOperand.innerText / 100) * parseFloat(this.previousOperand.innerText);
-                this.previousOperand.innerText = '';
-                break;
-        }
+        this.previousOperand.innerText += this.currentOperand.innerText 
+        // let operator = previousOperand.innerText.slice(-1);
+        // switch (operator) {
+        //     case '+':
+        //         this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) + parseFloat(this.currentOperand.innerText);
+        //         this.previousOperand.innerText = '';
+        //         break;
+        //     case '-':
+        //         this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) - parseFloat(this.currentOperand.innerText);
+        //         this.previousOperand.innerText = '';
+        //         break;
+        //     case '/':
+        //         this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) / parseFloat(this.currentOperand.innerText);
+        //         this.previousOperand.innerText = '';
+        //         break;
+        //     case '*':
+        //         this.currentOperand.innerText = parseFloat(this.previousOperand.innerText) * parseFloat(this.currentOperand.innerText);
+        //         this.previousOperand.innerText = '';
+        //         break;
+        //     case '%':
+        //         this.currentOperand.innerText = parseFloat(this.currentOperand.innerText / 100) * parseFloat(this.previousOperand.innerText);
+        //         this.previousOperand.innerText = '';
+        //         break;
+        // }
+    }
+
+    reversePOlNotationConv(){
+        let expression = [...this.previousOperand.innerText]
+        let counter = 0;
+        expression.forEach((i) => {
+             if(this.operationList.includes(i)){
+                counter++;
+                console.log(counter)
+                let lastSymbol = this.stack.at(this.stack.length - 1)
+                if(this.precedence.get(i) > this.precedence.get(lastSymbol) || this.stack.length === 0){
+                    this.stack.push(i)
+                }
+                 else{
+                    this.output.push(this.stack.pop())
+                    this.stack.push(i)
+                }
+             } else {
+                if(!this.output[counter]){
+                    this.output[counter] = '';
+                }
+                this.output[counter] += i; 
+             }
+        })
+        console.log(this.stack)
+        console.log(this.output)
+
     }
 
     clearAll() {
@@ -91,9 +129,9 @@ class Calculator {
                 this.currentOperand.innerText = '';
             }
         }
-        if (this.currentOperand.innerText === '0') {
-            this.currentOperand.innerText = '';
-        }
+        // if (this.currentOperand.innerText === '0') {
+        //     this.currentOperand.innerText = '';
+        // }
         this.currentOperand.innerText += number;
     }
 
@@ -107,13 +145,13 @@ class Calculator {
         }
 
         let lastSymbol = currentOperand.innerText.slice(-1);
-        for (let i = 0; i < this.operationList.length; i++) {
-            if(!this.operationList.includes(lastSymbol)){
-                this.currentOperand.innerText += '*';
-                break;
-            } 
-        };
         if(symbol == '('){
+            for (let i = 0; i < this.operationList.length; i++) {
+                if(!this.operationList.includes(lastSymbol)){
+                    this.currentOperand.innerText += '*';
+                    break;
+                } 
+            };
             this.currentOperand.innerText += '(';
         } else if(symbol == ')'){
             this.currentOperand.innerText += ')';
