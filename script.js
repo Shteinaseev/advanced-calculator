@@ -46,8 +46,8 @@ class Calculator {
         }
 
         eqlBTN.addEventListener('click', () => {
-            this.reversePOlNotationConv();
             this.calculate();
+            this.reversePOlNotationConv();
         })
 
         acBTN.addEventListener('click', () => {
@@ -86,27 +86,31 @@ class Calculator {
         // }
     }
 
+    isOperator(i){
+        return this.operationList.includes(i)
+    }
+
     reversePOlNotationConv(){
         let expression = [...this.previousOperand.innerText]
-        let counter = 0;
+        console.log(expression)
+        let str = ''
         expression.forEach((i) => {
-             if(this.operationList.includes(i)){
-                counter++;
-                console.log(counter)
+            console.log(i)
+             if(this.isOperator(i)){
                 let lastSymbol = this.stack.at(this.stack.length - 1)
+                console.log("str: " + str)
+                this.output.push(parseInt(str))
+                str = ''
                 if(this.precedence.get(i) > this.precedence.get(lastSymbol) || this.stack.length === 0){
+                    console.log("pr: " + i)
                     this.stack.push(i)
                 }
-                 else{
+                else{
                     this.output.push(this.stack.pop())
-                    this.stack.push(i)
                 }
-             } else {
-                if(!this.output[counter]){
-                    this.output[counter] = '';
-                }
-                this.output[counter] += i; 
-             }
+                } else  {
+                    str += i;
+            }
         })
         console.log(this.stack)
         console.log(this.output)
