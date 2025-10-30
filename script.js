@@ -98,20 +98,20 @@ class Calculator {
             console.log(i)
              if(this.isOperator(i)){
                 let lastSymbol = this.stack.at(this.stack.length - 1)
-                console.log("str: " + str)
                 this.output.push(parseInt(str))
                 str = ''
                 if(this.precedence.get(i) > this.precedence.get(lastSymbol) || this.stack.length === 0){
-                    console.log("pr: " + i)
+                    this.stack.push(i)
+                } else {
+                    this.output.push(this.stack.pop())
                     this.stack.push(i)
                 }
-                else{
-                    this.output.push(this.stack.pop())
-                }
-                } else  {
-                    str += i;
+            } else  {
+                str += i;
             }
         })
+        this.output.push(parseInt(str))
+        this.output.push(this.stack)
         console.log(this.stack)
         console.log(this.output)
 
