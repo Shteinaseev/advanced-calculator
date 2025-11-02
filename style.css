@@ -128,13 +128,13 @@ body {
     grid-column: span 2;
 }
 
-.previous-operand {
+.expression-display {
     font-size: 1.25rem;
     color: #ffffff88;
     font-weight: 200;
 }
 
-.current-operand {
+.input-display {
     font-size: 2.2rem;
     font-weight: 300;
 }
@@ -152,7 +152,10 @@ body {
     /* -webkit-box-reflect: below 1px linear-gradient(transparent, #0004); */
     /* color: #7A9DCB; */
     background-color: var(--bg-color);
+}
 
+.btn:focus {
+    outline: 2px solid rgba(var(--bg-color), 0.5);
 }
 
 .operator,

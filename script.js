@@ -13,9 +13,9 @@ class Calculator {
         ["%", 4]
     ])
     
-    constructor(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN, parenthesis) {
-        this.previousOperand = previousOperand;
-        this.currentOperand = currentOperand;
+    constructor(expressionDisplay, inputDisplay, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN, parenthesis) {
+        this.expressionDisplay = expressionDisplay;
+        this.inputDisplay = inputDisplay;
         this.numberBTNs = numberBTNs;
         this.operationBTNs = operationBTNs;
         this.eqlBTN = eqlBTN;
@@ -87,15 +87,13 @@ class Calculator {
     }
 
     appendPoint() {
-        const expression = this.currentOperand.innerText;
-        let lastChar = expression.slice(-1);
-        if(expression.length === 0 || this.isOperator(lastChar) || this.isParenthesis(lastChar)){
-            this.currentOperand.innerText += '0.';
+        const expression = this.inputDisplay.innerText;
+        if(expression.length === 0){
+            this.inputDisplay.innerText = '0.';
             return;
         }
-
         if(this.canAddPoint(expression)){
-            this.currentOperand.innerText += '.';
+            this.inputDisplay.innerText += '.';
         }
     }
 
@@ -130,14 +128,10 @@ class Calculator {
         })
         const result = this.stack.pop();
         let resultStr = result.toString();
-        
         if (resultStr.length > 12) {
-            let scientific = result.toExponential(8);
-            scientific = scientific.replace(/(\.\d*?[1-9])0+e/, '$1e');
-            this.currentOperand.innerText = scientific;
+            this.inputDisplay.innerText = result.toExponential(6);
         } else {
-            resultStr = resultStr.replace(/(\.\d*?[1-9])0+$|\.0+$/, '$1');
-            this.currentOperand.innerText = resultStr;
+            this.inputDisplay.innerText = resultStr;
         }    
     }
 
@@ -155,8 +149,8 @@ class Calculator {
     }
 
     reversePOlNotation(){
-        this.previousOperand.innerText = this.currentOperand.innerText + '=' 
-        let expression = [...this.previousOperand.innerText]
+        this.expressionDisplay.innerText = this.inputDisplay.innerText
+        let expression = [...this.expressionDisplay.innerText]
         console.log(expression)
         let str = ''
         expression.forEach((i) => {
@@ -199,48 +193,48 @@ class Calculator {
     }
 
     clearAll() {
-        this.currentOperand.innerText = '';
-        this.previousOperand.innerText = '';
+        this.inputDisplay.innerText = '';
+        this.expressionDisplay.innerText = '';
     }
 
     delSymbol() {
-        this.currentOperand.innerText = this.currentOperand.innerText.slice(0, -1);
+        this.inputDisplay.innerText = this.inputDisplay.innerText.slice(0, -1);
     }
 
     appendNumber(number) {
-        this.currentOperand.innerText += number;
+        this.inputDisplay.innerText += number;
     }
 
     appendParenthesis(symbol){
         if(symbol == ')'){
-            for (let i = 0; i < this.currentOperand.innerText.length; i++) {
-                if(!this.currentOperand.innerText.includes('(')){
+            for (let i = 0; i < this.inputDisplay.innerText.length; i++) {
+                if(!this.inputDisplay.innerText.includes('(')){
                     return;
                 }
             }
         }
 
-        let lastSymbol = currentOperand.innerText.slice(-1);
+        let lastSymbol = inputDisplay.innerText.slice(-1);
         if(symbol == '('){
             for (let i = 0; i < this.operationList.length; i++) {
                 if(!this.operationList.includes(lastSymbol)){
-                    this.currentOperand.innerText += '*';
+                    this.inputDisplay.innerText += '*';
                     break;
                 } 
             };
-            this.currentOperand.innerText += '(';
+            this.inputDisplay.innerText += '(';
         } else if(symbol == ')'){
-            this.currentOperand.innerText += ')';
+            this.inputDisplay.innerText += ')';
         }
     }
 
     chooseOperation(operation) {
-        this.currentOperand.innerText += operation;
+        this.inputDisplay.innerText += operation;
     }
 }
 
-const previousOperand = document.querySelector('.previous-operand');
-const currentOperand = document.querySelector('.current-operand');
+const expressionDisplay = document.querySelector('.expression-display');
+const inputDisplay = document.querySelector('.input-display');
 const numberBTNs = document.querySelectorAll('.number');
 const operationBTNs = document.querySelectorAll('.operator');
 const eqlBTN = document.getElementById('eql');
@@ -249,4 +243,4 @@ const delBTN = document.getElementById('del');
 const pointBTN = document.getElementById('point');
 const parenthesis = document.querySelectorAll('.parenthesis')
 
-Calculator = new Calculator(previousOperand, currentOperand, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN, parenthesis);
+Calculator = new Calculator(expressionDisplay, inputDisplay, numberBTNs, operationBTNs, eqlBTN, acBTN, delBTN, pointBTN, parenthesis);
