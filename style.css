@@ -33,6 +33,15 @@ p {
     text-align: right;
 }
 
+#canvas-container {
+    width: 100vw;
+    height: 100vh;
+    aspect-ratio: 1;
+    position: fixed;
+    top: 0;
+    z-index: -1;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background-image: radial-gradient(circle closest-corner, #060a33, #000);
@@ -148,7 +157,7 @@ body {
 
 .btn:hover {
     border: 2px solid var(--bg-color);
-      box-shadow: 0 0 5px var(--bg-color), 0 0 25px var(--bg-color), 0 0 50px var(--bg-color), 0 0 200px var(--bg-color);
+    box-shadow: 0 0 5px var(--bg-color), 0 0 25px var(--bg-color), 0 0 50px var(--bg-color), 0 0 200px var(--bg-color);
     /* -webkit-box-reflect: below 1px linear-gradient(transparent, #0004); */
     /* color: #7A9DCB; */
     background-color: var(--bg-color);
@@ -159,7 +168,8 @@ body {
 }
 
 .operator,
-.cr, #eql {
+.cr,
+#eql {
     --bg-color: #ffffff55;
     box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1), 0 4px 20px rgba(187, 155, 255, 0.2);
     background-color: #ffffff22;
@@ -290,26 +300,27 @@ body {
     opacity: 1;
 }
 
-@media (max-width: 420px){
-    body{
+@media (max-width: 420px) {
+    body {
         padding-inline: 0.6rem;
     }
-    .calculator{
+
+    .calculator {
         padding-inline: 0.6rem;
-    }        
-    
+    }
+
 }
 
-@media(max-width: 350px){
-    body{
+@media(max-width: 350px) {
+    body {
         padding-inline: 0;
     }
 
-    .calculator{
+    .calculator {
         padding: 0.5rem;
     }
 
-    .btn-cont{
+    .btn-cont {
         gap: 0.4rem;
     }
 }
