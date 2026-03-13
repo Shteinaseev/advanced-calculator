@@ -10,5 +10,5 @@
 - `index.html` — интерфейс калькулятора
 - `style.css` — стили
 - `script.js` — логика калькулятора
-
-### Ссылка на проект: https://shteinaseev.github.io/advanced-calculator/
+  
+Ссылка на проект: https://shteinaseev.github.io/advanced-calculator/
